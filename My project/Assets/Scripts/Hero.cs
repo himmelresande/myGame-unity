@@ -1,13 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Hero : MonoBehaviour
+public class Hero : Entity
 {
     [SerializeField] private float speed = 3f;
-    [SerializeField] private int lives = 5;
+    [SerializeField] private int lives;
+    [SerializeField] private int health;
     [SerializeField] private float jumpForce = 15f;
-    private bool isGrounded = false;
+    public bool isGrounded = false;
+
+    [SerializeField] private Image[] hearts;
+
+    [SerializeField] private Sprite aliveHeart;
+    [SerializeField] private Sprite deadHeart;
+
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -24,10 +32,14 @@ public class Hero : MonoBehaviour
 
     private void Awake()
     {
+        lives = 5;
+        health = lives;
+        Instance = this;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
-        Instance = this;
+        
+        
     }
 
     private void FixedUpdate()
@@ -42,6 +54,21 @@ public class Hero : MonoBehaviour
         Run();
         if (isGrounded && Input.GetButton("Jump"))
             Jump(); 
+
+        if (health > lives)
+            health = lives;
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            if (i < health)
+                hearts[i].sprite = aliveHeart;
+            else
+                hearts[i].sprite = deadHeart;
+
+            if (i < lives)
+                hearts[i].enabled = true;
+            else
+                hearts[i].enabled = false;
+        }
     }
     private void Run()
     {
@@ -63,10 +90,15 @@ public class Hero : MonoBehaviour
         isGrounded = collider.Length > 1;
         if (!isGrounded) State = States.jump;
     }
-    public void GetDamage()
+    public override void GetDamage()
     {
-        lives -= 1;
-        Debug.Log(lives);
+        health -= 1;
+        if (health == 0)
+        {
+            foreach (var h in hearts)
+                h.sprite = deadHeart;
+            Die();
+        }
     }
 
 
