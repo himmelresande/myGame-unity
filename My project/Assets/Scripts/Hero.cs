@@ -15,6 +15,8 @@ public class Hero : Entity
 
     [SerializeField] private Sprite aliveHeart;
     [SerializeField] private Sprite deadHeart;
+    [SerializeField] private AudioSource JumpSound;
+    [SerializeField] private AudioSource GetDamageSound;
 
 
     private Rigidbody2D rb;
@@ -81,6 +83,7 @@ public class Hero : Entity
     private void Jump()
     {
         rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+        JumpSound.Play();
     }
 
     private void CheckGround()
@@ -92,6 +95,7 @@ public class Hero : Entity
     }
     public override void GetDamage()
     {
+        GetDamageSound.Play();
         health -= 1;
         if (health == 0)
         {
