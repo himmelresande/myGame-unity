@@ -17,6 +17,7 @@ public class Hero : Entity
     [SerializeField] private Sprite deadHeart;
     [SerializeField] private AudioSource JumpSound;
     [SerializeField] private AudioSource GetDamageSound;
+    [SerializeField] private GameObject loosePanel;
 
 
     private Rigidbody2D rb;
@@ -105,6 +106,18 @@ public class Hero : Entity
         }
     }
 
+    public override void Die()
+    {
+        State = States.death;
+        Invoke("SetLoosePanel", 0.1f);
+
+    }
+
+    private void SetLoosePanel()
+    {
+        loosePanel.SetActive(true);
+        Time.timeScale = 0;
+    }
 
 }
 
@@ -112,6 +125,6 @@ public enum States
 {
     idle,
     run,
-    jump
-
+    jump,
+    death
 }
