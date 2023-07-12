@@ -55,7 +55,7 @@ public class Hero : Entity
         if (isGrounded) State = States.idle;
         if (Input.GetButton("Horizontal"))
         Run();
-        if (isGrounded && Input.GetButton("Jump"))
+        if (isGrounded && Input.GetButtonDown("Jump"))
             Jump(); 
 
         if (health > lives)
