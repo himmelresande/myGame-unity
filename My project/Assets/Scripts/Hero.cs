@@ -108,13 +108,8 @@ public class Hero : Entity
     public void GetFallDamage()
     {
         GetDamageSound.Play();
-        health -= 5;
-        if (health == 0)
-        {
-            foreach (var h in hearts)
-                h.sprite = deadHeart;
-            Die();
-        }
+        Die();
+        
     }
 
     public override void Die()
